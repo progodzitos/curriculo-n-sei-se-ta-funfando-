@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Submissão de Currículo</title>
+</head>
+<body>
+    <div class="caixona">
+        <h1>Formulario</h1>
+        <form id="myForm">
+            <div class="row">
+                <div class="form-group">
+                    <label for="nome-completo">Nome completo:</label>
+                    <input type="text" placeholder="ex: nome sobrenome" id="nome-completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" placeholder="ex: seuemail@example.com" id="email" required>
+                    <span id="email-error" class="error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="telefone">Numero de telefone:</label>
+                    <input type="tel" placeholder="ex: (00) 0000-0000" id="telefone" required>
+                    <span id="telefone-error" class="error"></span>
+                </div>
+            </div>
+            <div class="botao">
+                <button type="button" onclick="enviarDados()">Enviar</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function enviarDados() {
+            const nomeInput = document.getElementById('nome-completo');
+            const emailInput = document.getElementById('email');
+            const telefoneInput = document.getElementById('telefone');
+            const emailError = document.getElementById('email-error');
+            const telefoneError = document.getElementById('telefone-error');
+
+            let valid = true;
+
+            // Validação do email
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if (!emailPattern.test(emailInput.value)) {
+                emailError.textContent = 'Email inválido';
+                valid = false;
+            } else {
+                emailError.textContent = '';
+            }
+
+            // Validação do telefone
+            const telefonePattern = /^\(\d{2}\) \d{4}-\d{4}$/;
+            if (!telefonePattern.test(telefoneInput.value)) {
+                telefoneError.textContent = 'Telefone inválido';
+                valid = false;
+            } else {
+                telefoneError.textContent = '';
+            }
+
+            if (valid) {
+                const formData = new FormData();
+                formData.append('nome', nomeInput.value);
+                formData.append('email', emailInput.value);
+                formData.append('telefone', telefoneInput.value);
+
+                fetch('https://script.google.com/macros/s/AKfycbxzqID8WeTJlKQoh86uXNDLamYLUhjkXh1wM2lnCSqXA7Jv_p2nwkvqYNbm7b42XlXQ/exec', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Dados enviados com sucesso!');
+                        document.getElementById('myForm').reset();
+                    } else {
+                        alert('Erro ao enviar dados.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao enviar dados.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
